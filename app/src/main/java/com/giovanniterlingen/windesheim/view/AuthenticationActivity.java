@@ -232,6 +232,8 @@ public class AuthenticationActivity extends BaseActivity {
                     }
                     startActivity(intent);
                     finish();
+                } else if (url.startsWith("https://login.microsoftonline.com/login.srf")){
+                    view.loadUrl(getJavascriptStaySignedIn());
                 }
             }
         });
@@ -244,6 +246,10 @@ public class AuthenticationActivity extends BaseActivity {
                 "';document.getElementById('passwordInput').value='" +
                 password +
                 "';document.getElementById('submitButton').onclick();";
+    }
+
+    private String getJavascriptStaySignedIn(){
+        return "javascript:document.getElementById('idSIButton9').click();";
     }
 
     private void showConnectionError() {
