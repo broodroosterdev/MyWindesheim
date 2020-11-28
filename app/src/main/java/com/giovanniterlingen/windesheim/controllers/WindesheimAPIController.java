@@ -59,7 +59,7 @@ import java.util.Date;
 public class WindesheimAPIController {
 
     private static final String WINDESHEIM_API_URL = "http://api.windesheim.nl/api";
-    private static final String WINDESHEIM_AZURE_API_URL = "https://windesheimapi.azurewebsites.net/api/v1";
+    private static final String WINDESHEIM_AZURE_API_URL = "https://windesheimapi.azurewebsites.net/api/v2";
 
     public static synchronized void getAndSaveLessons(boolean notify) throws Exception {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.applicationContext);
@@ -123,8 +123,8 @@ public class WindesheimAPIController {
         } else {
             typeString = "Vak";
         }
-        URL url = new URL(WINDESHEIM_API_URL + "/" + typeString + "/" + id + "/Les");
-        String response = makeRequest(url, false);
+        URL url = new URL(WINDESHEIM_AZURE_API_URL + "/" + typeString + "/" + id + "/Les");
+        String response = makeRequest(url, true);
 
         JSONArray jsonArray = new JSONArray(response);
         Lesson[] lessons = new Lesson[jsonArray.length()];
@@ -174,8 +174,8 @@ public class WindesheimAPIController {
     }
 
     public static ScheduleItem[] getClasses() throws Exception {
-        URL url = new URL(WINDESHEIM_API_URL + "/Klas/");
-        String response = makeRequest(url, false);
+        URL url = new URL(WINDESHEIM_AZURE_API_URL + "/Klas/");
+        String response = makeRequest(url, true);
 
         JSONArray jsonArray = new JSONArray(response);
         ScheduleItem[] items = new ScheduleItem[jsonArray.length()];
@@ -188,8 +188,8 @@ public class WindesheimAPIController {
     }
 
     public static ScheduleItem[] getTeachers() throws Exception {
-        URL url = new URL(WINDESHEIM_API_URL + "/Docent/");
-        String response = makeRequest(url, false);
+        URL url = new URL(WINDESHEIM_AZURE_API_URL + "/Docent/");
+        String response = makeRequest(url, true);
 
         JSONArray jsonArray = new JSONArray(response);
         ScheduleItem[] items = new ScheduleItem[jsonArray.length()];
@@ -202,8 +202,8 @@ public class WindesheimAPIController {
     }
 
     public static ScheduleItem[] getSubjects() throws Exception {
-        URL url = new URL(WINDESHEIM_API_URL + "/Vak/");
-        String response = makeRequest(url, false);
+        URL url = new URL(WINDESHEIM_AZURE_API_URL + "/Vak/");
+        String response = makeRequest(url, true);
 
         JSONArray jsonArray = new JSONArray(response);
         ScheduleItem[] items = new ScheduleItem[jsonArray.length()];
