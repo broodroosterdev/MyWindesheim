@@ -44,7 +44,6 @@ import androidx.preference.PreferenceManager;
 import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -200,11 +199,6 @@ public class AuthenticationActivity extends BaseActivity {
                         loginUrl = null;
                         isBusy = false;
 
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(Constants.TELEMETRY_PROPERTY_LOGIN_SUCCESSFUL, false);
-                        TelemetryUtils.getInstance()
-                                .logEvent(Constants.TELEMETRY_LOGIN, bundle);
-
                         return;
                     }
                     view.loadUrl(getJavascriptString(username, password));
@@ -220,10 +214,6 @@ public class AuthenticationActivity extends BaseActivity {
 
                     isBusy = false;
 
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean(Constants.TELEMETRY_PROPERTY_LOGIN_SUCCESSFUL, true);
-                    TelemetryUtils.getInstance()
-                            .logEvent(Constants.TELEMETRY_LOGIN, bundle);
                     Intent intent;
                     if(isEducator && !isSchedule) {
                         intent = new Intent(AuthenticationActivity.this, EducatorActivity.class);
@@ -262,18 +252,6 @@ public class AuthenticationActivity extends BaseActivity {
                                 dialog.cancel();
                             }
                         }).show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TelemetryUtils.getInstance().setCurrentScreen(this, "AuthenticationActivity");
-    }
-
-    @Override
-    protected void onPause() {
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
-        super.onPause();
     }
 
     @Override

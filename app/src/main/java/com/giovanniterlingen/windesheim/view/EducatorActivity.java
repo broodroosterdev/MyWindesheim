@@ -33,19 +33,16 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
 import com.giovanniterlingen.windesheim.models.EC;
 import com.giovanniterlingen.windesheim.models.PropaedeuticEC;
 import com.giovanniterlingen.windesheim.models.Result;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.giovanniterlingen.windesheim.view.Adapters.ResultsAdapter;
 
 import org.json.JSONArray;
@@ -90,18 +87,6 @@ public class EducatorActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TelemetryUtils.getInstance().setCurrentScreen(this, "EducatorActivity");
-    }
-
-    @Override
-    protected void onPause() {
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
-        super.onPause();
     }
 
     @Override

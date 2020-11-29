@@ -42,7 +42,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -60,7 +59,6 @@ import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
 import com.giovanniterlingen.windesheim.utils.CalendarUtils;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.giovanniterlingen.windesheim.utils.TimeUtils;
 import com.giovanniterlingen.windesheim.view.Fragments.ScheduleFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -243,7 +241,6 @@ public class ScheduleActivity extends BaseActivity
         onPauseWeekCount = mPager.getAdapter().getCount();
         onPauseIndex = mPager.getCurrentItem();
 
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
         super.onPause();
     }
 
@@ -261,8 +258,6 @@ public class ScheduleActivity extends BaseActivity
             setViewPager();
         }
         super.onResume();
-
-        TelemetryUtils.getInstance().setCurrentScreen(this, "ScheduleActivity");
 
         // Check if we have asked for a rating already
         long lastReviewPromptTime =
