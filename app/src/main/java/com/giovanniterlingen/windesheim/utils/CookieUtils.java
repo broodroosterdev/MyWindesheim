@@ -36,6 +36,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.view.AuthenticationActivity;
+import com.giovanniterlingen.windesheim.view.ChooseScheduleActivity;
 import com.giovanniterlingen.windesheim.view.EducatorActivity;
 import com.giovanniterlingen.windesheim.view.NatschoolActivity;
 
@@ -45,29 +46,51 @@ import com.giovanniterlingen.windesheim.view.NatschoolActivity;
  * @author Giovanni Terlingen
  */
 public class CookieUtils {
+    public static void refreshEducator(final Context context){
+        Intent intent = new Intent(context, AuthenticationActivity.class);
+        intent.putExtra("educator", true);
+        intent.putExtra("popup", true);
+        context.startActivity(intent);
+    }
 
-    public static void checkCookieAndIntent(final Context context, final boolean educator) {
+    public static void checkCookieAndIntent(final Context context, CookieContext cookieContext) {
         if (ApplicationLoader.isConnected()) {
-            if (educator) {
-                if (getEducatorCookie() != null && getEducatorCookie().length() > 0) {
-                    Intent intent = new Intent(context, EducatorActivity.class);
+            switch(cookieContext){
+                case CHOOSE_SCHEDULE:{
+                    if(getEducatorCookie() != null && getEducatorCookie().length() > 0){
+                        Intent intent = new Intent(context, ChooseScheduleActivity.class);
+                        context.startActivity(intent);
+                        return;
+                    }
+                    Intent intent = new Intent(context, AuthenticationActivity.class);
+                    intent.putExtra("educator", true);
+                    intent.putExtra("popup", true);
                     context.startActivity(intent);
                     return;
                 }
-                Intent intent = new Intent(context, AuthenticationActivity.class);
-                intent.putExtra("educator", true);
-                context.startActivity(intent);
-                return;
+                case OPEN_EDUCATOR:{
+                    if (getEducatorCookie() != null && getEducatorCookie().length() > 0) {
+                        Intent intent = new Intent(context, EducatorActivity.class);
+                        context.startActivity(intent);
+                        return;
+                    }
+                    Intent intent = new Intent(context, AuthenticationActivity.class);
+                    intent.putExtra("educator", true);
+                    context.startActivity(intent);
+                    return;
+                }
+                case OPEN_NATSCHOOL:{
+                    if (getNatSchoolCookie() != null && getNatSchoolCookie().length() > 0) {
+                        Intent intent = new Intent(context, NatschoolActivity.class);
+                        context.startActivity(intent);
+                        return;
+                    }
+                    Intent intent = new Intent(context, AuthenticationActivity.class);
+                    intent.putExtra("educator", false);
+                    context.startActivity(intent);
+                    return;
+                }
             }
-            if (getNatSchoolCookie() != null && getNatSchoolCookie().length() > 0) {
-                Intent intent = new Intent(context, NatschoolActivity.class);
-                context.startActivity(intent);
-                return;
-            }
-            Intent intent = new Intent(context, AuthenticationActivity.class);
-            intent.putExtra("educator", false);
-            context.startActivity(intent);
-            return;
 
         }
         new AlertDialog.Builder(context)
@@ -76,7 +99,6 @@ public class CookieUtils {
                 .setPositiveButton(context.getResources().getString(R.string.connect),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                checkCookieAndIntent(context, educator);
                                 dialog.cancel();
                             }
                         })

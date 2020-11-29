@@ -42,7 +42,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -59,8 +58,8 @@ import com.giovanniterlingen.windesheim.NotificationCenter;
 import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
 import com.giovanniterlingen.windesheim.utils.CalendarUtils;
+import com.giovanniterlingen.windesheim.utils.CookieContext;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.giovanniterlingen.windesheim.utils.TimeUtils;
 import com.giovanniterlingen.windesheim.view.Fragments.ScheduleFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -166,10 +165,10 @@ public class ScheduleActivity extends BaseActivity
                                 finish();
                                 break;
                             case R.id.natschool:
-                                CookieUtils.checkCookieAndIntent(ScheduleActivity.this, false);
+                                CookieUtils.checkCookieAndIntent(ScheduleActivity.this, CookieContext.OPEN_NATSCHOOL);
                                 break;
                             case R.id.educator:
-                                CookieUtils.checkCookieAndIntent(ScheduleActivity.this, true);
+                                CookieUtils.checkCookieAndIntent(ScheduleActivity.this, CookieContext.OPEN_EDUCATOR);
                                 break;
                             case R.id.downloads:
                                 Intent intent1 = new Intent(ScheduleActivity.this,
