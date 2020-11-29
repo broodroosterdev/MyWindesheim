@@ -34,6 +34,10 @@ import androidx.preference.PreferenceManager;
 
 import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.Constants;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * A schedule app for students and teachers of Windesheim
@@ -49,8 +53,12 @@ public class LaunchActivity extends Activity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences sharedPreferences = PreferenceManager
-                        .getDefaultSharedPreferences(LaunchActivity.this);
+                SharedPreferences sharedPreferences = null;
+                try {
+                    sharedPreferences = EncryptedPreferencesUtils.getInstance(LaunchActivity.this);
+                } catch (GeneralSecurityException | IOException e) {
+                    e.printStackTrace();
+                }
                 boolean introFinished = sharedPreferences.getBoolean(Constants.PREFS_INTRO_FINISHED,
                         false);
                 Intent intent;

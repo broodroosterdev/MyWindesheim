@@ -48,8 +48,11 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.giovanniterlingen.windesheim.utils.NotificationUtils;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -168,8 +171,12 @@ public class ApplicationLoader extends Application {
     }
 
     public static void setDarkMode() {
-        SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(applicationContext);
+        SharedPreferences preferences = null;
+        try {
+            preferences = EncryptedPreferencesUtils.getInstance(applicationContext);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
         int currentNightMode = applicationContext.getResources().getConfiguration().uiMode &
                 Configuration.UI_MODE_NIGHT_MASK;
         boolean useDarkMode = preferences.getBoolean(Constants.PREFS_DARK_MODE,

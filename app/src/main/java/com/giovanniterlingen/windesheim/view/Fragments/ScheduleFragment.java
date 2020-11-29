@@ -50,13 +50,16 @@ import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
 import com.giovanniterlingen.windesheim.models.Lesson;
 import com.giovanniterlingen.windesheim.utils.ColorUtils;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.giovanniterlingen.windesheim.view.Adapters.ScheduleAdapter;
 import com.giovanniterlingen.windesheim.view.AuthenticationActivity;
 import com.giovanniterlingen.windesheim.view.ScheduleActivity;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -93,8 +96,12 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
                     hasBottomBar ? (int) getResources().getDimension(R.dimen.bottom_bar_height)
                             : 0);
 
-            SharedPreferences preferences = PreferenceManager
-                    .getDefaultSharedPreferences(ApplicationLoader.applicationContext);
+            SharedPreferences preferences = null;
+            try {
+                preferences = EncryptedPreferencesUtils.getInstance(ApplicationLoader.applicationContext);
+            } catch (GeneralSecurityException | IOException e) {
+                e.printStackTrace();
+            }
             long lastFetchTime = preferences.getLong(Constants.PREFS_LAST_FETCH_TIME, 0);
             if (lastFetchTime == 0 || System.currentTimeMillis() - lastFetchTime >
                     TimeUnit.DAYS.toMillis(1)) {
@@ -146,11 +153,17 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
         if (!this.isVisible()) {
             return;
         }
-        CookieUtils.refreshEducator(getActivity());
-        new ScheduleFetcher(ScheduleFragment.this,
-                true, false, true)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        ApplicationLoader.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                CookieUtils.refreshEducator(getActivity());
+                new ScheduleFetcher(ScheduleFragment.this,
+                        true, false, true)
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
     }
+
 
     private void alertConnectionProblem() {
         if (!this.isVisible()) {

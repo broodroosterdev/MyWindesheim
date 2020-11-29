@@ -54,6 +54,7 @@ import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
 import com.giovanniterlingen.windesheim.models.ScheduleItem;
 import com.giovanniterlingen.windesheim.utils.ColorUtils;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.giovanniterlingen.windesheim.view.Adapters.ChooseScheduleAdapter;
 import com.giovanniterlingen.windesheim.view.AuthenticationActivity;
 import com.giovanniterlingen.windesheim.view.ScheduleActivity;
@@ -61,7 +62,9 @@ import com.giovanniterlingen.windesheim.view.ScheduleActivity;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -164,14 +167,6 @@ public class ChooseScheduleFragment extends Fragment {
         return view;
     }
 
-    private void refreshSession(){
-        if (!this.isVisible()) {
-            return;
-        }
-        CookieUtils.refreshEducator(getActivity());
-        startTask();
-    }
-
     private void alertConnectionProblem() {
         if (!isVisible() && !isMenuVisible()) {
             return;
@@ -262,8 +257,7 @@ public class ChooseScheduleFragment extends Fragment {
 
                             DatabaseController.getInstance().addSchedule(id, name, fragment.type);
 
-                            SharedPreferences preferences = PreferenceManager
-                                    .getDefaultSharedPreferences(ApplicationLoader.applicationContext);
+                            SharedPreferences preferences = EncryptedPreferencesUtils.getInstance(ApplicationLoader.applicationContext);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.remove(Constants.PREFS_LAST_FETCH_TIME);
                             editor.apply();
@@ -286,17 +280,15 @@ public class ChooseScheduleFragment extends Fragment {
                             fragment.getActivity().finish();
                         } catch (SQLiteConstraintException e) {
                             fragment.alertScheduleExists();
+                        } catch (GeneralSecurityException | IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 };
             } catch (InterruptedException e) {
                 //
             } catch (Exception e) {
-                if(e instanceof JSONException){
-                    fragment.refreshSession();
-                } else {
                     fragment.alertConnectionProblem();
-                }
             }
             return null;
         }

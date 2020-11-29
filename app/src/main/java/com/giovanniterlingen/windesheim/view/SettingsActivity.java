@@ -58,7 +58,11 @@ import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.utils.CalendarUtils;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -97,7 +101,11 @@ public class SettingsActivity extends BaseActivity {
                 getResources().getString(R.string.interval_thirty_minutes),
                 getResources().getString(R.string.interval_fifteen_minutes),
                 getResources().getString(R.string.interval_always_on)};
-        preferences = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        try {
+            preferences = EncryptedPreferencesUtils.getInstance(SettingsActivity.this);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
 
         lessonStart = findViewById(R.id.lesson_notification_switch);
         lessonStart.setOnClickListener(new View.OnClickListener() {

@@ -36,6 +36,7 @@ import com.giovanniterlingen.windesheim.models.Schedule;
 import com.giovanniterlingen.windesheim.models.ScheduleItem;
 import com.giovanniterlingen.windesheim.utils.CalendarUtils;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.giovanniterlingen.windesheim.utils.NotificationUtils;
 import com.giovanniterlingen.windesheim.utils.TimeUtils;
 
@@ -62,7 +63,7 @@ public class WindesheimAPIController {
     private static final String WINDESHEIM_AZURE_API_URL = "https://windesheimapi.azurewebsites.net/api/v2";
 
     public static synchronized void getAndSaveLessons(boolean notify) throws Exception {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.applicationContext);
+        SharedPreferences preferences = EncryptedPreferencesUtils.getInstance(ApplicationLoader.applicationContext);
         if (preferences.getBoolean(Constants.PREFS_SYNC_CALENDAR, false)) {
             CalendarUtils.deleteAllLessonsFromCalendar();
         }

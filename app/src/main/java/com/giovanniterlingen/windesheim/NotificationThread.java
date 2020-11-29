@@ -34,8 +34,11 @@ import androidx.preference.PreferenceManager;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
 import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
 import com.giovanniterlingen.windesheim.models.Lesson;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.giovanniterlingen.windesheim.utils.NotificationUtils;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -52,8 +55,12 @@ class NotificationThread extends Thread {
 
     @Override
     public void run() {
-        SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(ApplicationLoader.applicationContext);
+            SharedPreferences preferences = null;
+            try {
+                preferences = EncryptedPreferencesUtils.getInstance(ApplicationLoader.applicationContext);
+            } catch (GeneralSecurityException | IOException e) {
+                e.printStackTrace();
+            }
         int notificationType;
         String notificationText;
         while ((notificationType = preferences.getInt(Constants.PREFS_NOTIFICATIONS_TYPE,

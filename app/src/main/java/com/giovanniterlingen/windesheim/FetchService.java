@@ -32,6 +32,7 @@ import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
 import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 
 /**
  * A schedule app for students and teachers of Windesheim
@@ -47,8 +48,7 @@ public class FetchService extends JobService {
                 @Override
                 public void run() {
                     try {
-                        SharedPreferences preferences = PreferenceManager
-                                .getDefaultSharedPreferences(ApplicationLoader.applicationContext);
+                        SharedPreferences preferences = EncryptedPreferencesUtils.getInstance(ApplicationLoader.applicationContext);
                         boolean notify = preferences
                                 .getBoolean(Constants.PREFS_SCHEDULE_CHANGE_NOTIFICATION, true);
                         WindesheimAPIController.getAndSaveLessons(notify);

@@ -43,12 +43,15 @@ import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
 import com.giovanniterlingen.windesheim.models.EC;
 import com.giovanniterlingen.windesheim.models.PropaedeuticEC;
 import com.giovanniterlingen.windesheim.models.Result;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.giovanniterlingen.windesheim.view.Adapters.ResultsAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.security.GeneralSecurityException;
 
 /**
  * A schedule app for students and teachers of Windesheim
@@ -60,7 +63,12 @@ public class EducatorActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(EducatorActivity.this);
+        SharedPreferences preferences = null;
+        try {
+            preferences = EncryptedPreferencesUtils.getInstance(EducatorActivity.this);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
         if (preferences.getString(Constants.PREFS_USERNAME, "").length() == 0 ||
                 preferences.getString(Constants.PREFS_PASSWORD, "").length() == 0) {
             Intent intent = new Intent(EducatorActivity.this,
@@ -124,8 +132,7 @@ public class EducatorActivity extends BaseActivity {
                 return null;
             }
             try {
-                SharedPreferences preferences = PreferenceManager
-                        .getDefaultSharedPreferences(activity);
+                SharedPreferences preferences = EncryptedPreferencesUtils.getInstance(activity);
 
                 String studentNumber = preferences.getString(Constants.PREFS_USERNAME, "").split("@")[0];
                 String response = WindesheimAPIController.getStudyInfo(studentNumber);

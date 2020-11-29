@@ -57,15 +57,19 @@ import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.NotificationCenter;
 import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
+import com.giovanniterlingen.windesheim.models.Schedule;
 import com.giovanniterlingen.windesheim.utils.CalendarUtils;
 import com.giovanniterlingen.windesheim.utils.CookieContext;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.giovanniterlingen.windesheim.utils.TimeUtils;
 import com.giovanniterlingen.windesheim.view.Fragments.ScheduleFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -95,13 +99,16 @@ public class ScheduleActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (!DatabaseController.getInstance().hasSchedules()) {
-            Intent intent = new Intent(ScheduleActivity.this, ChooseScheduleActivity.class);
-            startActivity(intent);
+            CookieUtils.checkCookieAndIntent(ScheduleActivity.this, CookieContext.CHOOSE_SCHEDULE);
             super.onCreate(savedInstanceState);
             finish();
             return;
         }
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ScheduleActivity.this);
+        try {
+            sharedPreferences = EncryptedPreferencesUtils.getInstance(ScheduleActivity.this);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (sharedPreferences.getInt(Constants.PREFS_NOTIFICATIONS_TYPE, Constants
                 .NOTIFICATION_TYPE_NOT_SET) == Constants.NOTIFICATION_TYPE_NOT_SET) {

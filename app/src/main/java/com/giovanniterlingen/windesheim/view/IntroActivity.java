@@ -36,9 +36,13 @@ import androidx.preference.PreferenceManager;
 import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 import com.github.paolorotolo.appintro.model.SliderPage;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * A schedule app for students and teachers of Windesheim
@@ -112,8 +116,12 @@ public class IntroActivity extends AppIntro {
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
 
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(IntroActivity.this);
+        SharedPreferences sharedPreferences = null;
+        try {
+            sharedPreferences = EncryptedPreferencesUtils.getInstance(IntroActivity.this);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.PREFS_INTRO_FINISHED, true);
         editor.apply();

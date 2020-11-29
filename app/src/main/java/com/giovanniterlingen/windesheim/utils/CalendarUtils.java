@@ -43,6 +43,8 @@ import com.giovanniterlingen.windesheim.controllers.DatabaseController;
 import com.giovanniterlingen.windesheim.models.Calendar;
 import com.giovanniterlingen.windesheim.models.Lesson;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.TimeZone;
 
 /**
@@ -127,7 +129,12 @@ public class CalendarUtils {
         }
 
         long calendarId;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.applicationContext);
+        SharedPreferences preferences = null;
+        try {
+            preferences = EncryptedPreferencesUtils.getInstance(ApplicationLoader.applicationContext);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
         calendarId = preferences.getLong(Constants.PREFS_SYNC_CALENDAR_ID, -1);
         if (calendarId == -1) {
             return;

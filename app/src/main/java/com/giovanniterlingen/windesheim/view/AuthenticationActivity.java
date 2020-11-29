@@ -24,6 +24,7 @@
  **/
 package com.giovanniterlingen.windesheim.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,11 +41,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
+import androidx.security.crypto.MasterKeys;
 
 import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
+import com.giovanniterlingen.windesheim.utils.EncryptedPreferencesUtils;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * A schedule app for students and teachers of Windesheim
@@ -83,8 +91,12 @@ public class AuthenticationActivity extends BaseActivity {
         usernameTextLayout = findViewById(R.id.input_username_layout);
         passwordTextLayout = findViewById(R.id.input_password_layout);
 
-        preferences = PreferenceManager
-                .getDefaultSharedPreferences(AuthenticationActivity.this);
+        try {
+            preferences = EncryptedPreferencesUtils.getInstance(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         String username;
         String password;
@@ -241,7 +253,7 @@ public class AuthenticationActivity extends BaseActivity {
     }
 
     private String getJavascriptStaySignedIn(){
-        return "javascript:document.getElementById('idSIButton9').click();";
+        return "javascript:var button = document.getElementById('idSIButton9');if(button){button.click();}";
     }
 
     private void showConnectionError() {
