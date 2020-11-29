@@ -63,7 +63,7 @@ public class AuthenticationActivity extends BaseActivity {
     private boolean isRedirected = false;
     private WebView webView;
     private boolean isEducator = false;
-    private boolean isSchedule = false;
+    private boolean isPopup = false;
     private SharedPreferences preferences;
     private boolean isBusy = false;
 
@@ -74,7 +74,7 @@ public class AuthenticationActivity extends BaseActivity {
 
         Intent intent = getIntent();
         isEducator = intent.getBooleanExtra("educator", false);
-        isSchedule = intent.getBooleanExtra("schedule", false);
+        isPopup = intent.getBooleanExtra("popup", false);
 
         usernameEditText = findViewById(R.id.input_username);
         passwordEditText = findViewById(R.id.input_password);
@@ -215,11 +215,13 @@ public class AuthenticationActivity extends BaseActivity {
                     isBusy = false;
 
                     Intent intent;
-                    if(isEducator && !isSchedule) {
+                    if(isEducator && !isPopup) {
                         intent = new Intent(AuthenticationActivity.this, EducatorActivity.class);
                     } else {
-                        intent = new Intent(AuthenticationActivity.this, ChooseScheduleActivity.class);
+                        finish();
+                        return;
                     }
+
                     startActivity(intent);
                     finish();
                 } else if (url.startsWith("https://login.microsoftonline.com/login.srf")){

@@ -39,6 +39,8 @@ import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
+import com.giovanniterlingen.windesheim.utils.CookieContext;
+import com.giovanniterlingen.windesheim.utils.CookieUtils;
 import com.giovanniterlingen.windesheim.view.Adapters.ManageSchedulesAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -74,9 +76,7 @@ public class ManageSchedulesActivity extends BaseActivity {
                         alertTooMuchSchedules();
                         return;
                     }
-                    Intent intent = new Intent(ManageSchedulesActivity.this,
-                            ChooseScheduleActivity.class);
-                    startActivity(intent);
+                    CookieUtils.checkCookieAndIntent(ManageSchedulesActivity.this, CookieContext.CHOOSE_SCHEDULE);
                 }
             });
         }

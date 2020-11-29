@@ -25,6 +25,7 @@
 package com.giovanniterlingen.windesheim.view.Fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,8 +49,12 @@ import com.giovanniterlingen.windesheim.controllers.DatabaseController;
 import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
 import com.giovanniterlingen.windesheim.models.Lesson;
 import com.giovanniterlingen.windesheim.utils.ColorUtils;
+import com.giovanniterlingen.windesheim.utils.CookieUtils;
 import com.giovanniterlingen.windesheim.view.Adapters.ScheduleAdapter;
+import com.giovanniterlingen.windesheim.view.AuthenticationActivity;
 import com.giovanniterlingen.windesheim.view.ScheduleActivity;
+
+import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -135,6 +140,16 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
             emptyTextView.setVisibility(View.VISIBLE);
         }
         return viewGroup;
+    }
+
+    private void refreshSession(){
+        if (!this.isVisible()) {
+            return;
+        }
+        CookieUtils.refreshEducator(getActivity());
+        new ScheduleFetcher(ScheduleFragment.this,
+                true, false, true)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void alertConnectionProblem() {
@@ -230,7 +245,11 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
                 try {
                     WindesheimAPIController.getAndSaveLessons(false);
                 } catch (Exception e) {
-                    fragment.alertConnectionProblem();
+                    if(e instanceof JSONException){
+                        fragment.refreshSession();
+                    } else {
+                        fragment.alertConnectionProblem();
+                    }
                 }
             }
             lessons = DatabaseController.getInstance().getLessons(fragment.date);

@@ -54,17 +54,6 @@ public class ChooseScheduleActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ChooseScheduleActivity.this);
-        if (preferences.getString(Constants.PREFS_USERNAME, "").length() == 0 ||
-                preferences.getString(Constants.PREFS_PASSWORD, "").length() == 0) {
-            Intent intent = new Intent(ChooseScheduleActivity.this,
-                    AuthenticationActivity.class);
-            intent.putExtra("educator", true);
-            intent.putExtra("schedule", true);
-            startActivity(intent);
-            finish();
-            return;
-        }
         setContentView(R.layout.activity_choose_type);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
