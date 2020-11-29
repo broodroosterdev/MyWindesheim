@@ -45,7 +45,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.SwitchCompat;
@@ -59,9 +58,7 @@ import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.utils.CalendarUtils;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -78,7 +75,6 @@ public class SettingsActivity extends BaseActivity {
     private TextView calendarNameTextView;
     private SwitchCompat lessonStart;
     private SwitchCompat darkMode;
-    private SwitchCompat telemetry;
     private SwitchCompat sync;
     private CharSequence[] items;
     private int notificationId = Constants.NOTIFICATION_TYPE_NOT_SET;
@@ -197,21 +193,6 @@ public class SettingsActivity extends BaseActivity {
                 currentNightMode == Configuration.UI_MODE_NIGHT_YES);
         darkMode.setChecked(useDarkMode);
 
-        telemetry = findViewById(R.id.telemetry_switch);
-        telemetry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(Constants.PREFS_TELEMETRY_ALLOWED, telemetry.isChecked());
-                editor.apply();
-
-                FirebaseAnalytics.getInstance(SettingsActivity.this)
-                        .setAnalyticsCollectionEnabled(telemetry.isChecked());
-            }
-        });
-        boolean allowTelemetry = preferences.getBoolean(Constants.PREFS_TELEMETRY_ALLOWED, true);
-        telemetry.setChecked(allowTelemetry);
-
         Button deleteAccountButton = findViewById(R.id.logout_button);
         deleteAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,7 +236,6 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        TelemetryUtils.getInstance().setCurrentScreen(this, "SettingsActivity");
 
         boolean syncLessons = preferences.getBoolean(Constants.PREFS_SYNC_CALENDAR, false);
         sync.setChecked(syncLessons);
@@ -268,12 +248,6 @@ public class SettingsActivity extends BaseActivity {
             sync.setChecked(false);
         }
         updateCurrentCalendar();
-    }
-
-    @Override
-    protected void onPause() {
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
-        super.onPause();
     }
 
     private void updateCurrentCalendar() {
@@ -402,15 +376,6 @@ public class SettingsActivity extends BaseActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt(Constants.PREFS_WEEK_COUNT, weekCount);
                 editor.apply();
-
-                Bundle bundle = new Bundle();
-                bundle.putInt(Constants.TELEMETRY_PROPERTY_WEEK_COUNT, weekCount);
-                TelemetryUtils.getInstance().logEvent(Constants.TELEMETRY_KEY_WEEK_COUNT_CHANGED,
-                        bundle);
-
-                TelemetryUtils.getInstance()
-                        .setUserProperty(Constants.TELEMETRY_PROPERTY_WEEK_COUNT,
-                                Integer.toString(weekCount));
 
                 String weeks = getResources().getQuantityString(R.plurals.week_count, weekCount,
                         weekCount);

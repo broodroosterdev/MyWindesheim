@@ -242,7 +242,6 @@ public class ScheduleActivity extends BaseActivity
         onPauseWeekCount = mPager.getAdapter().getCount();
         onPauseIndex = mPager.getCurrentItem();
 
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
         super.onPause();
     }
 
@@ -260,8 +259,6 @@ public class ScheduleActivity extends BaseActivity
             setViewPager();
         }
         super.onResume();
-
-        TelemetryUtils.getInstance().setCurrentScreen(this, "ScheduleActivity");
 
         // Check if we have asked for a rating already
         long lastReviewPromptTime =

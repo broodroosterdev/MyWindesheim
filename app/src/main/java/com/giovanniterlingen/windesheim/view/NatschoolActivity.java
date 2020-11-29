@@ -29,12 +29,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.R;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.giovanniterlingen.windesheim.view.Fragments.ContentsFragment;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -63,18 +60,6 @@ public class NatschoolActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.contents_fragment, new ContentsFragment());
         ft.commit();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TelemetryUtils.getInstance().setCurrentScreen(this, "NatschoolActivity");
-    }
-
-    @Override
-    protected void onPause() {
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
-        super.onPause();
     }
 
     @Override

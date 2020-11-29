@@ -24,7 +24,6 @@
  **/
 package com.giovanniterlingen.windesheim.view.Adapters;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ import com.giovanniterlingen.windesheim.R;
 import com.giovanniterlingen.windesheim.controllers.DatabaseController;
 import com.giovanniterlingen.windesheim.models.Lesson;
 import com.giovanniterlingen.windesheim.utils.ColorUtils;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.giovanniterlingen.windesheim.view.HiddenLessonsActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -85,12 +83,6 @@ public class HiddenLessonsAdapter extends RecyclerView.Adapter<HiddenLessonsAdap
             public void onClick(View v) {
                 Lesson lesson = lessons[holder.getAdapterPosition()];
                 DatabaseController.getInstance().restoreLesson(lesson);
-
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.TELEMETRY_PROPERTY_NAME, lesson.getSubject());
-                TelemetryUtils.getInstance()
-                        .logEvent(Constants.TELEMETRY_KEY_LESSON_RESTORED, bundle);
-
 
                 activity.showSnackbar();
 

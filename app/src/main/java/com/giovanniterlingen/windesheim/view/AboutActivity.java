@@ -33,11 +33,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.R;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 
 /**
  * A schedule app for students and teachers of Windesheim
@@ -88,18 +85,6 @@ public class AboutActivity extends BaseActivity {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TelemetryUtils.getInstance().setCurrentScreen(this, "AboutActivity");
-    }
-
-    @Override
-    protected void onPause() {
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
-        super.onPause();
     }
 
     @Override

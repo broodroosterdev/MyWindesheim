@@ -36,7 +36,6 @@ import androidx.preference.PreferenceManager;
 import com.giovanniterlingen.windesheim.ApplicationLoader;
 import com.giovanniterlingen.windesheim.Constants;
 import com.giovanniterlingen.windesheim.R;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 import com.github.paolorotolo.appintro.model.SliderPage;
@@ -107,18 +106,6 @@ public class IntroActivity extends AppIntro {
         setVibrate(true);
         setVibrateIntensity(30);
         ApplicationLoader.setDarkMode();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TelemetryUtils.getInstance().setCurrentScreen(this, "IntroActivity");
-    }
-
-    @Override
-    protected void onPause() {
-        TelemetryUtils.getInstance().setCurrentScreen(this, null);
-        super.onPause();
     }
 
     @Override

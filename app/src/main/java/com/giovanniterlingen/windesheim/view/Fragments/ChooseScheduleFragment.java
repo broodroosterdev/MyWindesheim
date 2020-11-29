@@ -54,7 +54,6 @@ import com.giovanniterlingen.windesheim.controllers.WindesheimAPIController;
 import com.giovanniterlingen.windesheim.models.ScheduleItem;
 import com.giovanniterlingen.windesheim.utils.ColorUtils;
 import com.giovanniterlingen.windesheim.utils.CookieUtils;
-import com.giovanniterlingen.windesheim.utils.TelemetryUtils;
 import com.giovanniterlingen.windesheim.view.Adapters.ChooseScheduleAdapter;
 import com.giovanniterlingen.windesheim.view.AuthenticationActivity;
 import com.giovanniterlingen.windesheim.view.ScheduleActivity;
@@ -268,11 +267,6 @@ public class ChooseScheduleFragment extends Fragment {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.remove(Constants.PREFS_LAST_FETCH_TIME);
                             editor.apply();
-
-                            Bundle bundle = new Bundle();
-                            bundle.putString(Constants.TELEMETRY_PROPERTY_NAME, name);
-                            TelemetryUtils.getInstance()
-                                    .logEvent(Constants.TELEMETRY_KEY_SCHEDULE_ADDED, bundle);
 
                             ColorUtils.invalidateColorCache();
 
